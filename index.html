@@ -1,53 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- meta tags for character set and responsive design -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- compatibility with Internet Explorer -->
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <!-- link to an external stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <section>	
    <div class="color"> 
+    <!-- label and dropdown for selecting a voice -->
     Select Voice: <select id='voiceList'></select>
    </div> 
 
     <br><br>
    <div class="color"> 
+     <!-- input field for text to be spoken -->
      <input style= "width:800px; height: 300px;"id='txtInput' />
-   </div> 
+   <div> 
 
      <br><br>
 
    <div class="color">    
+    <!-- button to trigger speech synthesis -->
     <button id='btnSpeak' style=" background-color: #fffdd0;" >Speak!</button>
    </div> 
 
-
+    <!-- JavaScript code for text-to-speech functionality -->
     <script>
+        // Variables to access HTML elements and the speech synthesis API
         var txtInput = document.querySelector('#txtInput');
         var voiceList = document.querySelector('#voiceList');
         var btnSpeak = document.querySelector('#btnSpeak');
         var synth = window.speechSynthesis;
         var voices = [];
 
-        PopulateVoices();
-        if(speechSynthesis !== undefined){
-            speechSynthesis.onvoiceschanged = PopulateVoices;
-        }
-
-        btnSpeak.addEventListener('click', ()=> {
-            var toSpeak = new SpeechSynthesisUtterance(txtInput.value);
-            var selectedVoiceName = voiceList.selectedOptions[0].getAttribute('data-name');
-            voices.forEach((voice)=>{
-                if(voice.name === selectedVoiceName){
-                    toSpeak.voice = voice;
-                }
-            });
-            synth.speak(toSpeak);
-        });
-
+        // Function to populate the dropdown list with available voices
         function PopulateVoices(){
             voices = synth.getVoices();
             var selectedIndex = voiceList.selectedIndex < 0 ? 0 : voiceList.selectedIndex;
@@ -62,6 +54,24 @@
 
             voiceList.selectedIndex = selectedIndex;
         }
+
+        // Call PopulateVoices on page load and when voices change
+        PopulateVoices();
+        if(speechSynthesis !== undefined){
+            speechSynthesis.onvoiceschanged = PopulateVoices;
+        }
+
+        // Event listener for the Speak button
+        btnSpeak.addEventListener('click', ()=> {
+            var toSpeak = new SpeechSynthesisUtterance(txtInput.value);
+            var selectedVoiceName = voiceList.selectedOptions[0].getAttribute('data-name');
+            voices.forEach((voice)=>{
+                if(voice.name === selectedVoiceName){
+                    toSpeak.voice = voice;
+                }
+            });
+            synth.speak(toSpeak);
+        });
     </script>
 
   </section>  
